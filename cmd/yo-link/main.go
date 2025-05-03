@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/yowie645/Yo-Link/internal/config"
+	"github.com/yowie645/Yo-Link/internal/storage/sqlite"
 )
 
 const (
@@ -21,6 +22,12 @@ func main() {
 	log := setupLogger(cfg.Env)
 	log.Info("starting", slog.String("env", cfg.Env))
 	log.Debug("debug messages are enabled")
+
+	storage, err := sqlite.New(cfg.StoragePath)
+	if err != nil {
+		log.Error("failed to init storage")
+		os.Exit(1)
+	}
 	//TODO: init storage : sqlite
 	//TODO: init router : chi, "chi render"
 	//TODO: run server
