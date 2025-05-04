@@ -5,6 +5,8 @@ import (
 	"log/slog"
 	"os"
 
+	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/chi/v5"
 	"github.com/yowie645/Yo-Link/internal/config"
 	"github.com/yowie645/Yo-Link/internal/lib/logger/sl"
 	"github.com/yowie645/Yo-Link/internal/storage/sqlite"
@@ -30,8 +32,10 @@ func main() {
 		os.Exit(1)
 	}
 
-	//TODO: init storage : sqlite
-	//TODO: init router : chi, "chi render"
+	router := chi.NewRouter() //midlware
+
+	router.Use(middleware.RequestID)
+	router.Use(middleware.Logger)
 	//TODO: run server
 }
 
