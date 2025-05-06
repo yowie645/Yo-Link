@@ -5,9 +5,10 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/yowie645/Yo-Link/internal/config"
+	"github.com/yowie645/Yo-Link/internal/https-server/middleware/logger" // Импорт вашего логгера
 	"github.com/yowie645/Yo-Link/internal/lib/logger/sl"
 	"github.com/yowie645/Yo-Link/internal/storage/sqlite"
 )
@@ -32,11 +33,15 @@ func main() {
 		os.Exit(1)
 	}
 
-	router := chi.NewRouter() //midlware
+	router := chi.NewRouter()
 
+	// Middleware
 	router.Use(middleware.RequestID)
-	router.Use(middleware.Logger)
-	//TODO: run server
+	router.Use(logger.New(log))
+	router.Use(middleware.Recoverer)
+	router.Use(middleware.URLFormat)
+
+	// TODO: run server
 }
 
 func setupLogger(env string) *slog.Logger {

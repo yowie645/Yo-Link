@@ -9,9 +9,8 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 )
 
-func New(log *slog.Logger) func(next http.Handler) http.Handler {
+func New(log *slog.Logger) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
-
 		log := log.With(
 			slog.String("component", "middleware/logger"),
 		)
@@ -19,7 +18,6 @@ func New(log *slog.Logger) func(next http.Handler) http.Handler {
 		log.Info("logger middleware initialized")
 
 		fn := func(w http.ResponseWriter, r *http.Request) {
-
 			entry := log.With(
 				slog.String("method", r.Method),
 				slog.String("path", r.URL.Path),
@@ -32,12 +30,10 @@ func New(log *slog.Logger) func(next http.Handler) http.Handler {
 			startTime := time.Now()
 
 			defer func() {
-
 				entry.Info("request completed",
 					slog.Int("status", ww.Status()),
 					slog.Int("bytes", ww.BytesWritten()),
-					slog.Duration("duration_ms", time.Since(startTime)),
-					slog.Float64("duration_sec", time.Since(startTime).Seconds()),
+					slog.Duration("duration", time.Since(startTime)),
 				)
 			}()
 
