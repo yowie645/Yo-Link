@@ -26,6 +26,7 @@ func main() {
 
 	log := setupLogger(cfg.Env)
 	log.Info("starting", slog.String("env", cfg.Env))
+	log.Error("debug message are enabled")
 	log.Debug("debug messages are enabled")
 
 	storage, err := sqlite.New(cfg.StoragePath)
@@ -33,6 +34,8 @@ func main() {
 		log.Error("failed to init storage", sl.Err(err))
 		os.Exit(1)
 	}
+
+	_ = storage
 
 	router := chi.NewRouter()
 
