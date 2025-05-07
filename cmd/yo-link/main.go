@@ -9,6 +9,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/yowie645/Yo-Link/internal/config"
 	"github.com/yowie645/Yo-Link/internal/https-server/middleware/logger" // Импорт вашего логгера
+	"github.com/yowie645/Yo-Link/internal/lib/logger/handlers/slogpretty"
 	"github.com/yowie645/Yo-Link/internal/lib/logger/sl"
 	"github.com/yowie645/Yo-Link/internal/storage/sqlite"
 )
@@ -48,7 +49,7 @@ func setupLogger(env string) *slog.Logger {
 	var log *slog.Logger
 	switch env {
 	case envLocal:
-		log = slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelDebug}))
+		log = setupPretySlog()
 	case envDev:
 		log = slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelDebug}))
 	case envProd:
@@ -56,4 +57,15 @@ func setupLogger(env string) *slog.Logger {
 	}
 
 	return log
+}
+
+func setupPretySlog() *slog.Logger {
+	opts := slogpretty.PrettyHandlerOptions{
+		SlogOpts: &slog.HandlerOptions{
+			Level: slog.LevelDebug,
+		},
+	}
+
+	handler := opts.NewPrettyHandler(os.Stdout)
+	return slog.New(handler)
 }
