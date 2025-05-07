@@ -8,6 +8,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/yowie645/Yo-Link/internal/config"
+	"github.com/yowie645/Yo-Link/internal/https-server/handlers/url/save"
 	"github.com/yowie645/Yo-Link/internal/https-server/middleware/logger" // Импорт вашего логгера
 	"github.com/yowie645/Yo-Link/internal/lib/logger/handlers/slogpretty"
 	"github.com/yowie645/Yo-Link/internal/lib/logger/sl"
@@ -44,6 +45,8 @@ func main() {
 	router.Use(logger.New(log))
 	router.Use(middleware.Recoverer)
 	router.Use(middleware.URLFormat)
+
+	router.Post("/url", save.New(log, storage))
 
 	// TODO: run server
 }

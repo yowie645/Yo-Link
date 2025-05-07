@@ -1,6 +1,7 @@
 package save
 
 import (
+	"errors"
 	"log/slog"
 	"net/http"
 
@@ -10,6 +11,7 @@ import (
 	resp "github.com/yowie645/Yo-Link/internal/lib/api/response"
 	"github.com/yowie645/Yo-Link/internal/lib/logger/sl"
 	"github.com/yowie645/Yo-Link/internal/lib/random"
+	"github.com/yowie645/Yo-Link/internal/storage"
 )
 
 type Request struct {
@@ -63,5 +65,31 @@ func New(log *slog.Logger, urlSaver URLSaver) http.HandlerFunc {
 		if alias == "" {
 			alias = random.NewRandomString(aliasLength)
 		}
+
+		id, err := urlSaver.SaveURL(req.URL, alias)
+
+		if errors.Is(err, storage.ErrURLExists) {
+			log.Info("url already exists", slog.String("url", req.URL))
+
+			render.JSON(w, r, resp.Error("url already exists"))
+			return
+		}
+
+		if err != nil {
+			log.Error("failed to save url", sl.Err(err))
+
+			render.JSON(w, r, resp.Error("failed to add url"))
+
+			return
+		}
+		log.Info("url added", slog.Int64("id", id))
+		responceOK(w, r, alias)
 	}
+}
+
+func responceOK(w http.ResponseWriter, r *http.Request, alias string) {
+	render.JSON(w, r, Response{
+		Response: resp.OK(),
+		Alias:    alias,
+	})
 }
