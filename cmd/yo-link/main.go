@@ -48,16 +48,15 @@ func main() {
 		middleware.RealIP,
 		middleware.Logger,
 		middleware.Recoverer,
-		render.SetContentType(render.ContentTypeJSON),
 	)
 
 	router.Route("/url", func(r chi.Router) {
+		r.Use(render.SetContentType(render.ContentTypeJSON))
 		r.Use(middleware.BasicAuth("yo-link", map[string]string{
 			cfg.HTTPServer.User: cfg.HTTPServer.Password,
 		}))
+		r.Post("/", save.New(log, storage))
 	})
-
-	router.Post("/url", save.New(log, storage))
 
 	router.Get("/{alias}", redirect.New(log, storage))
 
