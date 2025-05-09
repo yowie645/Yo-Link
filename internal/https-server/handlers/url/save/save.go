@@ -21,12 +21,13 @@ type Request struct {
 
 type Response struct {
 	resp.Response
-	Alias string `json: "alias,omitempty"`
+	Alias string `json:"alias,omitempty"`
 }
 
 const aliasLength = 6
 
-//go:generate go run github.com/vektra/mockery/v2@v2.53.3 --name=URLSaver
+//go⁡⁣⁢⁣:generate go run github.com/vektra/mockery/v2@v2.53.3 --name=URLSaver⁡
+
 type URLSaver interface {
 	SaveURL(urlSaver string, alias string) (int64, error)
 }
@@ -84,11 +85,11 @@ func New(log *slog.Logger, urlSaver URLSaver) http.HandlerFunc {
 			return
 		}
 		log.Info("url added", slog.Int64("id", id))
-		responceOK(w, r, alias)
+		responseOK(w, r, alias)
 	}
 }
 
-func responceOK(w http.ResponseWriter, r *http.Request, alias string) {
+func responseOK(w http.ResponseWriter, r *http.Request, alias string) {
 	render.JSON(w, r, Response{
 		Response: resp.OK(),
 		Alias:    alias,
