@@ -8,9 +8,9 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/go-chi/chi"
-
+	"github.com/go-chi/chi/v5"
 	"github.com/stretchr/testify/require"
+
 	"github.com/yowie645/Yo-Link/internal/https-server/handlers/redirect"
 	"github.com/yowie645/Yo-Link/internal/https-server/handlers/redirect/mocks"
 	"github.com/yowie645/Yo-Link/internal/lib/logger/handlers/slogdiscard"
@@ -38,7 +38,7 @@ func TestRedirectHandler(t *testing.T) {
 			name:      "Empty alias",
 			alias:     "",
 			respCode:  http.StatusBadRequest,
-			respError: "invalid request",
+			respError: "alias parameter is required",
 		},
 		{
 			name:      "URL not found",
@@ -52,7 +52,7 @@ func TestRedirectHandler(t *testing.T) {
 			alias:     "test_error",
 			error:     errors.New("unexpected error"),
 			respCode:  http.StatusInternalServerError,
-			respError: "internal error",
+			respError: "internal server error",
 		},
 	}
 
@@ -64,13 +64,9 @@ func TestRedirectHandler(t *testing.T) {
 
 			urlGetterMock := mocks.NewURLGetter(t)
 
-			if tc.alias != "" && tc.error != storage.ErrURLNotFound {
+			if tc.respError != "alias parameter is required" && tc.alias != "" {
 				urlGetterMock.On("GetURL", tc.alias).
 					Return(tc.url, tc.error).
-					Once()
-			} else if tc.error == storage.ErrURLNotFound {
-				urlGetterMock.On("GetURL", tc.alias).
-					Return("", tc.error).
 					Once()
 			}
 
@@ -79,9 +75,10 @@ func TestRedirectHandler(t *testing.T) {
 			req, err := http.NewRequest(http.MethodGet, "/"+tc.alias, nil)
 			require.NoError(t, err)
 
-			// Устанавливаем параметр маршрута вручную
 			rctx := chi.NewRouteContext()
-			rctx.URLParams.Add("alias", tc.alias)
+			if tc.alias != "" {
+				rctx.URLParams.Add("alias", tc.alias)
+			}
 			req = req.WithContext(context.WithValue(req.Context(), chi.RouteCtxKey, rctx))
 
 			rr := httptest.NewRecorder()
@@ -97,6 +94,8 @@ func TestRedirectHandler(t *testing.T) {
 				require.NoError(t, err)
 				require.Equal(t, tc.respError, resp["error"])
 			}
+
+			urlGetterMock.AssertExpectations(t)
 		})
 	}
 }

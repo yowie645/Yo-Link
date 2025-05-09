@@ -1,16 +1,16 @@
 package main
 
 import (
-	"fmt"
 	"log/slog"
 	"net/http"
 	"os"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/render"
 	"github.com/yowie645/Yo-Link/internal/config"
+	"github.com/yowie645/Yo-Link/internal/https-server/handlers/redirect"
 	"github.com/yowie645/Yo-Link/internal/https-server/handlers/url/save"
-	"github.com/yowie645/Yo-Link/internal/https-server/middleware/logger" // Импорт вашего логгера
 	"github.com/yowie645/Yo-Link/internal/lib/logger/handlers/slogpretty"
 	"github.com/yowie645/Yo-Link/internal/lib/logger/sl"
 	"github.com/yowie645/Yo-Link/internal/storage/sqlite"
@@ -24,11 +24,8 @@ const (
 
 func main() {
 	cfg := config.MustLoad()
-	fmt.Println(cfg)
-
 	log := setupLogger(cfg.Env)
-	log.Info("starting", slog.String("env", cfg.Env))
-	log.Debug("debug messages are enabled")
+	log.Info("starting server", slog.String("env", cfg.Env), slog.String("address", cfg.Address))
 
 	storage, err := sqlite.New(cfg.StoragePath)
 	if err != nil {
@@ -36,19 +33,35 @@ func main() {
 		os.Exit(1)
 	}
 
-	_ = storage
+	// тестовый alias
+	if cfg.Env == envLocal {
+		if _, err := storage.SaveURL("https://google.com", "test_alias"); err != nil {
+			log.Error("failed to save test url", sl.Err(err))
+		}
+	}
 
 	router := chi.NewRouter()
 
 	// Middleware
-	router.Use(middleware.RequestID)
-	router.Use(logger.New(log))
-	router.Use(middleware.Recoverer)
-	router.Use(middleware.URLFormat)
+	router.Use(
+		middleware.RequestID,
+		middleware.RealIP,
+		middleware.Logger,
+		middleware.Recoverer,
+		render.SetContentType(render.ContentTypeJSON),
+	)
 
 	router.Post("/url", save.New(log, storage))
 
-	log.Info("starting server", slog.String("address", cfg.Address))
+	router.Get("/{alias}", redirect.New(log, storage))
+
+	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		render.Status(r, http.StatusBadRequest)
+		render.JSON(w, r, map[string]interface{}{
+			"status": "Error",
+			"error":  "alias is required",
+		})
+	})
 
 	srv := &http.Server{
 		Addr:         cfg.Address,
@@ -59,33 +72,27 @@ func main() {
 	}
 
 	if err := srv.ListenAndServe(); err != nil {
-		log.Error("failed to start server")
+		log.Error("server stopped", sl.Err(err))
 	}
-
-	log.Error("server stopped")
 }
 
 func setupLogger(env string) *slog.Logger {
 	var log *slog.Logger
 	switch env {
 	case envLocal:
-		log = setupPretySlog()
+		log = setupPrettySlog()
 	case envDev:
 		log = slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelDebug}))
 	case envProd:
 		log = slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelInfo}))
 	}
-
 	return log
 }
 
-func setupPretySlog() *slog.Logger {
+func setupPrettySlog() *slog.Logger {
 	opts := slogpretty.PrettyHandlerOptions{
-		SlogOpts: &slog.HandlerOptions{
-			Level: slog.LevelDebug,
-		},
+		SlogOpts: &slog.HandlerOptions{Level: slog.LevelDebug},
 	}
-
 	handler := opts.NewPrettyHandler(os.Stdout)
 	return slog.New(handler)
 }
