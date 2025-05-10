@@ -29,14 +29,14 @@ func TestURLShortener_HappyPath(t *testing.T) {
 			URL:   gofakeit.URL(),
 			Alias: random.NewRandomString(10),
 		}).
-		WithBasicAuth("myuser", "mypass").
+		WithBasicAuth("yowie", "yowie").
 		Expect().
 		Status(200).
 		JSON().Object().
 		ContainsKey("alias")
 }
 
-func TestURLShortener_SaveRedirect(t *testing.T) {
+func TestURL_SaveRedirect(t *testing.T) {
 	testCases := []struct {
 		name  string
 		url   string
