@@ -46,7 +46,7 @@ func main() {
 	router.Use(
 		middleware.RequestID,
 		middleware.RealIP,
-		middleware.Logger,
+		/* middleware.Logger, */ //⁡⁣⁢⁣try to local⁡
 		middleware.Recoverer,
 	)
 
