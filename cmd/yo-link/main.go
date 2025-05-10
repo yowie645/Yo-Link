@@ -8,12 +8,15 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/render"
+
 	"github.com/yowie645/Yo-Link/internal/config"
 	"github.com/yowie645/Yo-Link/internal/https-server/handlers/redirect"
 	"github.com/yowie645/Yo-Link/internal/https-server/handlers/url/save"
 	"github.com/yowie645/Yo-Link/internal/lib/logger/handlers/slogpretty"
 	"github.com/yowie645/Yo-Link/internal/lib/logger/sl"
 	"github.com/yowie645/Yo-Link/internal/storage/sqlite"
+
+	"github.com/joho/godotenv"
 )
 
 const (
@@ -23,6 +26,10 @@ const (
 )
 
 func main() {
+	if err := godotenv.Load(); err != nil {
+		slog.Error("failed to load .env file", sl.Err(err))
+		os.Exit(1)
+	}
 	cfg := config.MustLoad()
 	log := setupLogger(cfg.Env)
 	log.Info("starting server", slog.String("env", cfg.Env), slog.String("address", cfg.Address))
@@ -31,13 +38,6 @@ func main() {
 	if err != nil {
 		log.Error("failed to init storage", sl.Err(err))
 		os.Exit(1)
-	}
-
-	// тестовый alias
-	if cfg.Env == envLocal {
-		if _, err := storage.SaveURL("https://google.com", "test_alias"); err != nil {
-			log.Error("failed to save test url", sl.Err(err))
-		}
 	}
 
 	router := chi.NewRouter()
