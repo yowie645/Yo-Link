@@ -45,6 +45,7 @@ Yo-Link is a simple and fast URL shortening service written in Go. It supports R
 - Automatic deployment via GitHub Actions:
 
   🪐 Specify the secrets (`DEPLOY_SSH_KEY`, `AUTH_PASS`) in the repository settings.
+
   🪐 Manually launch the workflow **Deploy App** by specifying the version (tag).
 
 - Configuration for systemd: deployment/yo-link.service.
