@@ -1,4 +1,4 @@
-<img src="screenshots/prev.jpg" width="100%" alt="Preview">
+<img src="screenshots/prev.jpg" width="100%" height="150px" alt="Preview">
 
 # 💫 About Project:
 
@@ -23,8 +23,8 @@ Yo-Link is a simple and fast URL shortening service written in Go. It supports R
 
 | Заголовок 1 | Заголовок 2     | Заголовок 3                           | Requires Auth |
 | ----------- | --------------- | ------------------------------------- | ------------- |
-| `**POST**`  | `/url`          | _Create short URL from original link_ | ✅ **Yes**    |
-| `**GET**`   | `/{your_alias}` | _Redirect to original UR_             | ❌ **No**     |
+| `POST`      | `/url`          | _Create short URL from original link_ | ✅ **Yes**    |
+| `GET`       | `/{your_alias}` | _Redirect to original UR_             | ❌ **No**     |
 
 #### Request Body Format (JSON)
 
@@ -37,15 +37,15 @@ Yo-Link is a simple and fast URL shortening service written in Go. It supports R
 
 ##### Where:
 
-- `**/url**` (required) - the original long link
-- `**alias**` (optional) - the desired short name for the link (if not specified, it will be generated automatically)
+- `/url` (required) - the original long link
+- **`alias`** (optional) - the desired short name for the link (if not specified, it will be generated automatically)
 
 ### 📦 Deployment
 
 - Automatic deployment via GitHub Actions:
 
-1. Specify the secrets (`DEPLOY_SSH_KEY`, `AUTH_PASS`) in the repository settings.
-2. Manually launch the workflow **Deploy App** by specifying the version (tag).
+  1. Specify the secrets (`DEPLOY_SSH_KEY`, `AUTH_PASS`) in the repository settings.
+  2. Manually launch the workflow **Deploy App** by specifying the version (tag).
 
 - Configuration for systemd: deployment/yo-link.service.
 
