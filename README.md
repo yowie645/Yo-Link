@@ -1,4 +1,4 @@
-![prev](screenshots/prev.jpg)
+<img src="screenshots/prev.jpg" width="100%" alt="Preview">
 
 # 💫 About Project:
 
