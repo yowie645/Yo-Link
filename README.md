@@ -1,6 +1,6 @@
-<img src="screenshots/prev.jpg" width="100%" height="150px" alt="Preview">
+<img src="screenshots/prev.jpg" width="100%" height="200px" alt="Preview">
 
-# 💫 About Project:
+<h1 style="text-align: center">💫 About Project:</h1>
 
 ## 🧸 Yo-Link — Link shortening service with API and web interface
 
@@ -51,28 +51,17 @@ Yo-Link is a simple and fast URL shortening service written in Go. It supports R
 
 ## 📸 Screenshots
 
-- **Command** `/start`
+- **request with alias** `/POST` **with alias**
 
-  ![Command /start](screenshots/start.jpg)
-  _Welcome to the bot’s main menu — your gateway to effortless link saving and exploration._
+  ![post-with-alias](screenshots/post-with-alias.jpg)
 
-- **Command** `/help`
+- **request without alias** `/POST` **without alias**
 
-  ![Command /help](screenshots/help.jpg)
-  _Helpful instructions at your fingertips — learn how to save links quickly and efficiently._
+  ![post-without-alias](screenshots/post-without-alias.jpg)
 
-- **Command** `/random`
+- **request** `/GET`
 
-  ![Command /random](screenshots/random.jpg)
-  _Discover hidden treasures from your saved collection with a simple `/random` command._
-
-  ![Error handling of an existing link](screenshots/double.jpg)
-  _Smart duplicate detection — the bot kindly lets you know if you've already saved that link._
-
-![error handling if the user has not uploaded any links](screenshots/noSavedLinks.jpg)
-_Friendly reminder when no links are saved yet — encouraging you to start your bookmarking journey!_
-
----
+  ![get](screenshots/get.jpg)
 
 ## 🛠️ Installation
 
@@ -80,14 +69,14 @@ _Friendly reminder when no links are saved yet — encouraging you to start your
 
 - [Go 1.22+](https://golang.org/dl/)
 
-## 🪭 Quick Setup
+### 🪭 Quick Setup
 
-### Clone repository
+#### Clone repository
 
 - git clone https://github.com/yowie645/Yo-Link.git
 - cd Yo-Link
 
-### Run
+#### Run
 
 - go run \path\Yo-link\cmd\yo-link\main.go
 
