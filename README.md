@@ -1,6 +1,6 @@
 <img src="screenshots/prev.jpg" width="100%" height="200px" alt="Preview">
 
-<h1 style="text-align: center">💫 About Project:</h1>
+<h1 align="center">💫 About Project:</h1>
 
 ## 🧸 Yo-Link — Link shortening service with API and web interface
 
@@ -44,22 +44,22 @@ Yo-Link is a simple and fast URL shortening service written in Go. It supports R
 
 - Automatic deployment via GitHub Actions:
 
-  1. Specify the secrets (`DEPLOY_SSH_KEY`, `AUTH_PASS`) in the repository settings.
-  2. Manually launch the workflow **Deploy App** by specifying the version (tag).
+  🪐 Specify the secrets (`DEPLOY_SSH_KEY`, `AUTH_PASS`) in the repository settings.
+  🪐 Manually launch the workflow **Deploy App** by specifying the version (tag).
 
 - Configuration for systemd: deployment/yo-link.service.
 
 ## 📸 Screenshots
 
-- **request with alias** `/POST` **with alias**
+- **Request** `/POST` **with alias**
 
   ![post-with-alias](screenshots/post-with-alias.jpg)
 
-- **request without alias** `/POST` **without alias**
+- **Request** `/POST` **without alias**
 
   ![post-without-alias](screenshots/post-without-alias.jpg)
 
-- **request** `/GET`
+- **Request** `/GET`
 
   ![get](screenshots/get.jpg)
 
@@ -81,3 +81,5 @@ Yo-Link is a simple and fast URL shortening service written in Go. It supports R
 - go run \path\Yo-link\cmd\yo-link\main.go
 
 Give LinkSaverBot a try and never lose track of your favorite links again!
+
+<img src="screenshots/prev.jpg" width="100%" height="200px" alt="Preview">
