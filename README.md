@@ -80,6 +80,4 @@ Yo-Link is a simple and fast URL shortening service written in Go. It supports R
 
 - go run \path\Yo-link\cmd\yo-link\main.go
 
-Give LinkSaverBot a try and never lose track of your favorite links again!
-
 <img src="screenshots/prev.jpg" width="100%" height="200px" alt="Preview">
