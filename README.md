@@ -21,10 +21,10 @@ Yo-Link is a simple and fast URL shortening service written in Go. It supports R
 
 ### 📄 API Documentation
 
-| Заголовок 1 | Заголовок 2     | Заголовок 3                           | Requires Auth |
-| ----------- | --------------- | ------------------------------------- | ------------- |
-| `POST`      | `/url`          | _Create short URL from original link_ | ✅ **Yes**    |
-| `GET`       | `/{your_alias}` | _Redirect to original UR_             | ❌ **No**     |
+| Requests | URL             | Descriptions                          | Requires Auth |
+| -------- | --------------- | ------------------------------------- | ------------- |
+| `POST`   | `/url`          | _Create short URL from original link_ | ✅ **Yes**    |
+| `GET`    | `/{your_alias}` | _Redirect to original UR_             | ❌ **No**     |
 
 #### Request Body Format (JSON)
 
