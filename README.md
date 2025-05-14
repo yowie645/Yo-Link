@@ -1,6 +1,6 @@
 <img src="screenshots/prev.jpg" width="100%" height="200px" alt="Preview">
 
-<h1 align="center">💫 About Project:</h1>
+<h1 align="center">💫 About Project</h1>
 
 ## 🧸 Yo-Link — Link shortening service with API and web interface
 
